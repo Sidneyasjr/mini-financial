@@ -1,7 +1,7 @@
 import {
   Entity,
-  Column,
   PrimaryGeneratedColumn,
+  Column,
   CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -23,7 +23,11 @@ export class User {
   @Exclude()
   password: string;
 
-  @Column({ type: "enum", enum: Role, default: Role.USER })
+  @Column({
+    type: "enum",
+    enum: Role,
+    default: Role.USER,
+  })
   role: Role;
 
   @CreateDateColumn()
