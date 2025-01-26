@@ -4,6 +4,9 @@ import { ConfigModule } from "@nestjs/config";
 import { dataSourceOptions } from './config/data-source';
 import { AuthModule } from "./modules/auth/auth.module";
 import { UsersModule } from "./modules/users/users.module";
+import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
+import { APP_GUARD } from "@nestjs/core";
+import { RolesGuard } from "./shared/guards/roles.guard";
 
 @Module({
   imports: [
@@ -13,6 +16,16 @@ import { UsersModule } from "./modules/users/users.module";
     TypeOrmModule.forRoot(dataSourceOptions),
     AuthModule,
     UsersModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
   ],
 })
 export class AppModule {}
