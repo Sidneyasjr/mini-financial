@@ -8,6 +8,7 @@ import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { APP_GUARD } from "@nestjs/core";
 import { RolesGuard } from "./shared/guards/roles.guard";
 import { WalletsModule } from "./modules/wallets/wallets.module";
+import { TransactionsModule } from "./modules/transactions/transactions.module";
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { WalletsModule } from "./modules/wallets/wallets.module";
     AuthModule,
     UsersModule,
     WalletsModule,
+    TransactionsModule
   ],
   providers: [
     {
