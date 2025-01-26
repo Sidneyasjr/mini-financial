@@ -5,6 +5,7 @@ import { UpdateWalletDto } from './dto/update-wallet.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Roles } from '../../shared/decorators/roles.decorator';
 import { Role } from '../../shared/types/role.enum';
+import { ParseUUIDWithoutFormatPipe } from 'src/shared/pipes/parse-uuid.pipe';
 
 @Controller('wallets')
 @UseGuards(JwtAuthGuard)
@@ -23,14 +24,14 @@ export class WalletsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @Request() req) {
+  findOne(@Param('id', ParseUUIDWithoutFormatPipe) id: string, @Request() req) {
     return this.walletsService.findOne(id, req.user.id);
   }
 
   @Patch(':id')
   @Roles(Role.USER)
   update(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDWithoutFormatPipe) id: string,
     @Body() updateWalletDto: UpdateWalletDto,
     @Request() req,
   ) {
@@ -39,7 +40,7 @@ export class WalletsController {
 
   @Delete(':id')
   @Roles(Role.USER)
-  remove(@Param('id') id: string, @Request() req) {
+  remove(@Param('id', ParseUUIDWithoutFormatPipe) id: string, @Request() req) {
     return this.walletsService.remove(id, req.user.id);
   }
 }

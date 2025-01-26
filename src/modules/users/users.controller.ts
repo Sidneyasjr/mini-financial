@@ -16,6 +16,7 @@ import {
   import { RolesGuard } from '../../shared/guards/roles.guard';
   import { Roles } from '../../shared/decorators/roles.decorator';
   import { Role } from '../../shared/types/role.enum';
+import { ParseUUIDWithoutFormatPipe } from 'src/shared/pipes/parse-uuid.pipe';
   
   @Controller('users')
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -48,7 +49,7 @@ import {
   
     @Patch(':id')
     @Roles(Role.ADMIN)
-    update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    update(@Param('id', ParseUUIDWithoutFormatPipe) id: string, @Body() updateUserDto: UpdateUserDto) {
       return this.usersService.update(id, updateUserDto);
     }
   }
