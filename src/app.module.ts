@@ -7,6 +7,7 @@ import { UsersModule } from "./modules/users/users.module";
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { APP_GUARD } from "@nestjs/core";
 import { RolesGuard } from "./shared/guards/roles.guard";
+import { WalletsModule } from "./modules/wallets/wallets.module";
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { RolesGuard } from "./shared/guards/roles.guard";
     TypeOrmModule.forRoot(dataSourceOptions),
     AuthModule,
     UsersModule,
+    WalletsModule,
   ],
   providers: [
     {

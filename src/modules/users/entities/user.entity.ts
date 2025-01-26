@@ -4,9 +4,11 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
 import { Role } from "../../../shared/types/role.enum";
 import { Exclude } from "class-transformer";
+import { Wallet } from "src/modules/wallets/entities/wallet.entity";
 
 @Entity("users")
 export class User {
@@ -35,4 +37,8 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Wallet, wallet => wallet.user)
+
+  wallets: Wallet[];
 }
