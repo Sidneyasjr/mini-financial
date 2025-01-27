@@ -9,6 +9,7 @@ import { APP_GUARD } from "@nestjs/core";
 import { RolesGuard } from "./shared/guards/roles.guard";
 import { WalletsModule } from "./modules/wallets/wallets.module";
 import { TransactionsModule } from "./modules/transactions/transactions.module";
+import { ReportsModule } from './modules/reports/reports.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { TransactionsModule } from "./modules/transactions/transactions.module";
     AuthModule,
     UsersModule,
     WalletsModule,
-    TransactionsModule
+    TransactionsModule,
+    ReportsModule
   ],
   providers: [
     {
