@@ -54,9 +54,13 @@ npm run migration:run
 npm run start:dev
 ```
 
+👨‍💻 Making a User Admin
+To make a user an admin, execute the following SQL command in your PostgreSQL database:
+sqlCopyUPDATE users SET role = 'admin' WHERE email = 'user@email.com';
+
 ## 📚 API Documentation
 
 API documentation is available through Swagger UI at:
 ```
-http://localhost:3000/api
+http://localhost:3000/docs
 ```
