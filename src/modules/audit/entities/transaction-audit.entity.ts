@@ -19,10 +19,10 @@ export class TransactionAudit {
   @Column()
   action: string;
 
-  @Column('jsonb')
+  @Column('jsonb', { nullable: true })
   oldValue: any;
 
-  @Column('jsonb')
+  @Column('jsonb', { nullable: true })
   newValue: any;
 
   @CreateDateColumn()

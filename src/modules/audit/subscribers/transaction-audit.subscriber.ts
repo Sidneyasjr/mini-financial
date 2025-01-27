@@ -24,11 +24,11 @@ export class TransactionAuditSubscriber
     private auditRepository: Repository<TransactionAudit>,
     private readonly cls: ClsService,
   ) {
-    dataSource.subscribers.push(this);
+    console.log('TransactionAuditSubscriber initialized');
+    dataSource.subscribers.push(this); 
   }
 
   listenTo() {
-    console.log('TransactionAuditSubscriber listenTo');
     return Transaction;
   }
 

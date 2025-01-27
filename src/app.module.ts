@@ -24,7 +24,6 @@ import { ReportsModule } from './modules/reports/reports.module';
         mount: true,
       },
     }),
-    AuthModule,
     UsersModule,
     WalletsModule,
     TransactionsModule,
