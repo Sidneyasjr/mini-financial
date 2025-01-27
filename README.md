@@ -34,7 +34,7 @@ npm install
 
 3. Start Docker containers
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 4. Set up environment variables
@@ -43,15 +43,14 @@ cp .env.example .env
 ```
 Edit the .env file with your local settings
 
-
-5. Run migrations
-```bash
-npm run migration:run
-```
-
-6. Start the development server
+5. Start the development server
 ```bash
 npm run start:dev
+```
+
+6. Run migrations
+```bash
+npm run migration:run
 ```
 
 ## 👨‍💻 Making a User Admin

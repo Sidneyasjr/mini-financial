@@ -15,7 +15,7 @@ export const dataSourceOptions: DataSourceOptions = {
   database: configService.get('DB_DATABASE'),
   entities: ['dist/**/*.entity{.ts,.js}'],
   migrations: ['dist/database/migrations/*{.ts,.js}'],
-  synchronize: true,
+  synchronize: false,
   subscribers: [],
 };
 
