@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, QueryRunner } from 'typeorm';
 import { Wallet } from './entities/wallet.entity';
@@ -13,7 +17,10 @@ export class WalletsService {
     private walletsRepository: Repository<Wallet>,
   ) {}
 
-  async create(createWalletDto: CreateWalletDto, userId: string): Promise<Wallet> {
+  async create(
+    createWalletDto: CreateWalletDto,
+    userId: string,
+  ): Promise<Wallet> {
     const wallet = this.walletsRepository.create({
       ...createWalletDto,
       userId,
@@ -44,9 +51,13 @@ export class WalletsService {
     return wallet;
   }
 
-  async update(id: string, updateWalletDto: UpdateWalletDto, userId: string): Promise<Wallet> {
+  async update(
+    id: string,
+    updateWalletDto: UpdateWalletDto,
+    userId: string,
+  ): Promise<Wallet> {
     const wallet = await this.findOne(id, userId);
-    
+
     const updatedWallet = Object.assign(wallet, updateWalletDto);
     return await this.walletsRepository.save(updatedWallet);
   }
@@ -59,7 +70,7 @@ export class WalletsService {
   async increaseBalance(queryRunner: QueryRunner, dto: UpdateWalletBalanceDto) {
     const wallet = await queryRunner.manager.findOne(Wallet, {
       where: { id: dto.walletId },
-      lock: { mode: 'pessimistic_write' }
+      lock: { mode: 'pessimistic_write' },
     });
 
     if (!wallet) {
@@ -75,7 +86,7 @@ export class WalletsService {
   async decreaseBalance(queryRunner: QueryRunner, dto: UpdateWalletBalanceDto) {
     const wallet = await queryRunner.manager.findOne(Wallet, {
       where: { id: dto.walletId },
-      lock: { mode: 'pessimistic_write' }
+      lock: { mode: 'pessimistic_write' },
     });
 
     if (!wallet) {

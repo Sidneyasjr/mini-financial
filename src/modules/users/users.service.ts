@@ -110,7 +110,10 @@ export class UsersService {
     }
 
     if (updateProfileDto.password) {
-      updateProfileDto.password = await bcrypt.hash(updateProfileDto.password, 10);
+      updateProfileDto.password = await bcrypt.hash(
+        updateProfileDto.password,
+        10,
+      );
     }
 
     await this.userRepository.update(id, updateProfileDto);

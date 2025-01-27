@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -18,10 +26,7 @@ export class TransactionsController {
 
   @Post(':id/cancel')
   @Roles(Role.USER)
-  cancel(
-    @Param('id') id: string,
-    @Request() req
-  ) {
+  cancel(@Param('id') id: string, @Request() req) {
     return this.transactionsService.cancel(id, req.user.id);
   }
 

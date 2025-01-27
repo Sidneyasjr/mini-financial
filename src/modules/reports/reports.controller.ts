@@ -4,7 +4,10 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../../shared/decorators/roles.decorator';
 import { Role } from '../../shared/types/role.enum';
 import { ReportsService } from './reports.service';
-import { GetBalanceReportDto, BalanceReportResponse } from './dto/get-balance-report.dto';
+import {
+  GetBalanceReportDto,
+  BalanceReportResponse,
+} from './dto/get-balance-report.dto';
 import { GetStatementDto, StatementResponse } from './dto/get-statement.dto';
 
 @Controller('reports')

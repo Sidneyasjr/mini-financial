@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { Transaction } from './entities/transaction.entity';
@@ -22,34 +26,51 @@ export class TransactionsService {
     await queryRunner.startTransaction();
 
     try {
-      const sourceWallet = await this.walletsService.findOne(createTransactionDto.sourceWalletId, userId);
+      const sourceWallet = await this.walletsService.findOne(
+        createTransactionDto.sourceWalletId,
+        userId,
+      );
 
       if (!sourceWallet) {
         throw new NotFoundException('Source wallet not found');
       }
 
       if (sourceWallet.userId !== userId) {
-        throw new BadRequestException('You can only create transactions for your own wallets');
+        throw new BadRequestException(
+          'You can only create transactions for your own wallets',
+        );
       }
 
       let targetWallet: Wallet | null = null;
       if (createTransactionDto.type === TransactionType.TRANSFER) {
         if (!createTransactionDto.targetWalletId) {
-          throw new BadRequestException('Target wallet is required for transfers');
+          throw new BadRequestException(
+            'Target wallet is required for transfers',
+          );
         }
 
-        if (createTransactionDto.sourceWalletId === createTransactionDto.targetWalletId) {
-          throw new BadRequestException('Source wallet and target wallet cannot be the same');
+        if (
+          createTransactionDto.sourceWalletId ===
+          createTransactionDto.targetWalletId
+        ) {
+          throw new BadRequestException(
+            'Source wallet and target wallet cannot be the same',
+          );
         }
 
-        targetWallet = await this.walletsService.findOne(createTransactionDto.targetWalletId, userId);
-        
+        targetWallet = await this.walletsService.findOne(
+          createTransactionDto.targetWalletId,
+          userId,
+        );
+
         if (!targetWallet) {
           throw new NotFoundException('Target wallet not found');
         }
 
         if (targetWallet.userId !== userId) {
-          throw new BadRequestException('You can only transfer to your own wallets');
+          throw new BadRequestException(
+            'You can only transfer to your own wallets',
+          );
         }
       }
 
@@ -62,28 +83,30 @@ export class TransactionsService {
         case TransactionType.INCOME:
           await this.walletsService.increaseBalance(queryRunner, {
             walletId: sourceWallet.id,
-            amount: createTransactionDto.amount
+            amount: createTransactionDto.amount,
           });
           break;
 
         case TransactionType.EXPENSE:
           await this.walletsService.decreaseBalance(queryRunner, {
             walletId: sourceWallet.id,
-            amount: createTransactionDto.amount
+            amount: createTransactionDto.amount,
           });
           break;
 
         case TransactionType.TRANSFER:
           await this.walletsService.decreaseBalance(queryRunner, {
             walletId: sourceWallet.id,
-            amount: createTransactionDto.amount
+            amount: createTransactionDto.amount,
           });
           if (!targetWallet) {
-            throw new BadRequestException('Target wallet is required for transfers');
+            throw new BadRequestException(
+              'Target wallet is required for transfers',
+            );
           }
           await this.walletsService.increaseBalance(queryRunner, {
             walletId: targetWallet.id,
-            amount: createTransactionDto.amount
+            amount: createTransactionDto.amount,
           });
           break;
       }
@@ -92,7 +115,6 @@ export class TransactionsService {
 
       await queryRunner.commitTransaction();
       return transaction;
-
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw error;
@@ -108,13 +130,15 @@ export class TransactionsService {
 
     try {
       const transaction = await this.findOne(id, userId);
-        
+
       if (!transaction) {
         throw new NotFoundException('Transaction not found');
       }
 
       if (transaction.userId !== userId) {
-        throw new BadRequestException('You can only cancel your own transactions');
+        throw new BadRequestException(
+          'You can only cancel your own transactions',
+        );
       }
 
       if (transaction.cancelled) {
@@ -125,26 +149,26 @@ export class TransactionsService {
         case TransactionType.INCOME:
           await this.walletsService.decreaseBalance(queryRunner, {
             walletId: transaction.sourceWallet.id,
-            amount: transaction.amount
+            amount: transaction.amount,
           });
           break;
 
         case TransactionType.EXPENSE:
           await this.walletsService.increaseBalance(queryRunner, {
             walletId: transaction.sourceWallet.id,
-            amount: transaction.amount
+            amount: transaction.amount,
           });
           break;
 
         case TransactionType.TRANSFER:
           await this.walletsService.increaseBalance(queryRunner, {
             walletId: transaction.sourceWallet.id,
-            amount: transaction.amount
+            amount: transaction.amount,
           });
 
           await this.walletsService.decreaseBalance(queryRunner, {
             walletId: transaction.targetWallet.id,
-            amount: transaction.amount
+            amount: transaction.amount,
           });
           break;
       }
@@ -154,7 +178,6 @@ export class TransactionsService {
 
       await queryRunner.commitTransaction();
       return transaction;
-
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw error;

@@ -5,14 +5,14 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-} from "typeorm";
-import { Role } from "../../../shared/types/role.enum";
-import { Exclude } from "class-transformer";
-import { Wallet } from "src/modules/wallets/entities/wallet.entity";
+} from 'typeorm';
+import { Role } from '../../../shared/types/role.enum';
+import { Exclude } from 'class-transformer';
+import { Wallet } from 'src/modules/wallets/entities/wallet.entity';
 
-@Entity("users")
+@Entity('users')
 export class User {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
@@ -26,7 +26,7 @@ export class User {
   password: string;
 
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: Role,
     default: Role.USER,
   })
@@ -39,6 +39,5 @@ export class User {
   updatedAt: Date;
 
   @OneToMany(() => Wallet, wallet => wallet.user)
-
   wallets: Wallet[];
 }

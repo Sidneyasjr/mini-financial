@@ -3,7 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, LessThan, In } from 'typeorm';
 import { Transaction } from '../transactions/entities/transaction.entity';
 import { Wallet } from '../wallets/entities/wallet.entity';
-import { GetBalanceReportDto, BalanceReportResponse, TransactionCategory } from './dto/get-balance-report.dto';
+import {
+  GetBalanceReportDto,
+  BalanceReportResponse,
+  TransactionCategory,
+} from './dto/get-balance-report.dto';
 import { GetStatementDto, StatementResponse } from './dto/get-statement.dto';
 
 @Injectable()
@@ -15,7 +19,10 @@ export class ReportsService {
     private walletRepository: Repository<Wallet>,
   ) {}
 
-  async getBalanceReport(userId: string, dto: GetBalanceReportDto): Promise<BalanceReportResponse> {
+  async getBalanceReport(
+    userId: string,
+    dto: GetBalanceReportDto,
+  ): Promise<BalanceReportResponse> {
     const startDate = dto.startDate ? new Date(dto.startDate) : new Date(0);
     const endDate = dto.endDate ? new Date(dto.endDate) : new Date();
 
@@ -23,7 +30,7 @@ export class ReportsService {
       where: { userId },
     });
 
-    const walletIds = wallets.map((wallet) => wallet.id);
+    const walletIds = wallets.map(wallet => wallet.id);
 
     const queryBuilder = this.transactionRepository
       .createQueryBuilder('transaction')
@@ -48,9 +55,9 @@ export class ReportsService {
       number
     >;
 
-    transactions.forEach((transaction) => {
+    transactions.forEach(transaction => {
       const amount = Number(transaction.amount);
-      
+
       if (transaction.type === 'INCOME') {
         totalIncome = Number((totalIncome + amount).toFixed(2));
       } else if (transaction.type === 'EXPENSE') {
@@ -59,9 +66,10 @@ export class ReportsService {
 
       if (transaction.category) {
         const currentAmount = categoryBreakdown[transaction.category] || 0;
-        const transactionAmount = transaction.type === 'EXPENSE' ? -amount : amount;
+        const transactionAmount =
+          transaction.type === 'EXPENSE' ? -amount : amount;
         categoryBreakdown[transaction.category] = Number(
-          (currentAmount + transactionAmount).toFixed(2)
+          (currentAmount + transactionAmount).toFixed(2),
         );
       }
     });
@@ -77,11 +85,17 @@ export class ReportsService {
       totalExpenses,
       periodStart: startDate,
       periodEnd: endDate,
-      categoryBreakdown: Object.keys(categoryBreakdown).length > 0 ? categoryBreakdown : undefined,
+      categoryBreakdown:
+        Object.keys(categoryBreakdown).length > 0
+          ? categoryBreakdown
+          : undefined,
     };
   }
-    
-  async getStatement(userId: string, dto: GetStatementDto): Promise<StatementResponse> {
+
+  async getStatement(
+    userId: string,
+    dto: GetStatementDto,
+  ): Promise<StatementResponse> {
     const startDate = dto.startDate ? new Date(dto.startDate) : new Date(0);
     const endDate = dto.endDate ? new Date(dto.endDate) : new Date();
 
@@ -100,7 +114,7 @@ export class ReportsService {
       });
     }
 
-    const walletIds = wallets.map((w) => w.id);
+    const walletIds = wallets.map(w => w.id);
 
     const openingBalanceTransactions = await this.transactionRepository.find({
       where: {
@@ -110,17 +124,25 @@ export class ReportsService {
     });
 
     let openingBalance = 0;
-    openingBalanceTransactions.forEach((transaction) => {
+    openingBalanceTransactions.forEach(transaction => {
       if (transaction.type === 'INCOME') {
-        openingBalance = Number((openingBalance + Number(transaction.amount)).toFixed(2));
+        openingBalance = Number(
+          (openingBalance + Number(transaction.amount)).toFixed(2),
+        );
       } else if (transaction.type === 'EXPENSE') {
-        openingBalance = Number((openingBalance - Number(transaction.amount)).toFixed(2));
+        openingBalance = Number(
+          (openingBalance - Number(transaction.amount)).toFixed(2),
+        );
       } else if (transaction.type === 'TRANSFER') {
         if (walletIds.includes(transaction.sourceWalletId)) {
-          openingBalance = Number((openingBalance - Number(transaction.amount)).toFixed(2));
+          openingBalance = Number(
+            (openingBalance - Number(transaction.amount)).toFixed(2),
+          );
         }
         if (walletIds.includes(transaction.targetWalletId)) {
-          openingBalance = Number((openingBalance + Number(transaction.amount)).toFixed(2));
+          openingBalance = Number(
+            (openingBalance + Number(transaction.amount)).toFixed(2),
+          );
         }
       }
     });
@@ -152,13 +174,13 @@ export class ReportsService {
 
     queryBuilder.orderBy('transaction.createdAt', 'ASC');
 
-      const transactions = await queryBuilder.getMany();
-      
+    const transactions = await queryBuilder.getMany();
+
     let totalIncome = 0;
     let totalExpenses = 0;
     let runningBalance = openingBalance;
 
-    const processedTransactions = transactions.map((transaction) => {
+    const processedTransactions = transactions.map(transaction => {
       const amount = Number(transaction.amount);
 
       if (transaction.type === 'INCOME') {
