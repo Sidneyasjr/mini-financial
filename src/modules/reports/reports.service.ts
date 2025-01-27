@@ -6,7 +6,6 @@ import { Wallet } from '../wallets/entities/wallet.entity';
 import {
   GetBalanceReportDto,
   BalanceReportResponse,
-  TransactionCategory,
 } from './dto/get-balance-report.dto';
 import { GetStatementDto, StatementResponse } from './dto/get-statement.dto';
 
@@ -50,8 +49,8 @@ export class ReportsService {
 
     let totalIncome = 0;
     let totalExpenses = 0;
-    const categoryBreakdown: Record<TransactionCategory, number> = {} as Record<
-      TransactionCategory,
+    const categoryBreakdown: Record<string, number> = {} as Record<
+      string,
       number
     >;
 

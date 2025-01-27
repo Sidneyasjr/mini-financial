@@ -1,26 +1,33 @@
-import { IsOptional, IsDateString, IsEnum } from 'class-validator';
-
-export enum TransactionCategory {
-  FOOD = 'FOOD',
-  LEISURE = 'LEISURE',
-  TRANSPORT = 'TRANSPORT',
-  HEALTH = 'HEALTH',
-  EDUCATION = 'EDUCATION',
-  OTHER = 'OTHER',
-}
+import { IsOptional, IsDateString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class GetBalanceReportDto {
+  @ApiProperty({
+    required: false,
+    type: 'string',
+    format: 'date',
+    example: '2021-10-01',
+  })
   @IsOptional()
   @IsDateString()
   startDate?: Date;
 
+  @ApiProperty({
+    required: false,
+    type: 'string',
+    format: 'date',
+    example: '2021-10-31',
+  })
   @IsOptional()
   @IsDateString()
   endDate?: Date;
 
+  @ApiProperty({
+    required: false,
+    example: 'FOOD',
+  })
   @IsOptional()
-  @IsEnum(TransactionCategory)
-  category?: TransactionCategory;
+  category?: string;
 }
 
 export class BalanceReportResponse {
@@ -34,5 +41,5 @@ export class BalanceReportResponse {
 
   periodEnd: Date;
 
-  categoryBreakdown?: Record<TransactionCategory, number>;
+  categoryBreakdown?: Record<string, number>;
 }
